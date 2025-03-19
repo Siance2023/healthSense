@@ -1,0 +1,8 @@
+pandas
+seaborn
+sklearn
+streamlit
+pytorch
+numpy
+joblib
+pickle

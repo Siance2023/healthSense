@@ -138,11 +138,14 @@ if st.button("Predict"):
 ```
 ✅ Predictions align with actual post-meal blood glucose measurements.
 
-## 🛠 Next Steps?
-- Enhance model training! 🚀
-- Increase the number of features (meal timing, physical activity) and improve data quality.
-
+## 🛠 Next Steps TL;DR
 As the experiment is conducted from the data of a single person, who eats a balanced diets, without excess and at fixed times, who also engages in regular sports activity, therefore subject to moderate glycemic wanderings, the GPO data do not vary enormously between meals. The model tends to predict values that are close to the training data. It would therefore be necessary to test with other profiles of people to determine the generalization capacity of the model. This is the objective of the later phases of this project.
+
+- Improve the training of the foundational model with more data! 🚀
+We are currently testing transformer models, and even diffusion models, where the first convolutional layers will be used to represent the data according to essential characteristics. From this representation in the latent space, we will group them into clusters corresponding to classes of postprandial glycemia values. For this, we need a lot of data.
+- Diversify subjects, increase the number of measurements, enrich features (meal timing, physical activity), and improve data quality.
+- The foundational model will be generic and should be adapted to the context of each user at the time of inference by providing a few examples of user-specific data or specific prompts.
+- The Streamlit application will also be adapted to this new context.
 
 ## 🔎 Conclusion
 ✅ Neural networks are well-suited for this field, outperforming other tested models.
@@ -150,3 +153,5 @@ As the experiment is conducted from the data of a single person, who eats a bala
 ✅ Expanding and diversifying data is crucial to improving model generalization.
 
 To go further on this subject,we are calling for a motivated community to contribute to a public and anonymous dataset!
+
+You can read this in Medium (https://medium.com/@saddek.belaid/ai-powered-glycemic-control-a-data-driven-approach-32397f0c464f)

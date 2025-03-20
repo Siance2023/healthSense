@@ -149,4 +149,4 @@ As the experiment is conducted from the data of a single person, who eats a bala
 ✅ Encouraging results suggest AI can bring major advancements in glycemic control strategies beyond restrictive diets.
 ✅ Expanding and diversifying data is crucial to improving model generalization.
 
-To go further on this subject,I am calling for a motivated community to contribute to a public and anonymous dataset!
+To go further on this subject,we are calling for a motivated community to contribute to a public and anonymous dataset!

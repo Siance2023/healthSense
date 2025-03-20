@@ -10,8 +10,8 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 # Load the data
-file_path = r'c:\\Users\\admin\\anaconda3\\envs\\ATMAN\\_TeamSiance\\Santé\\Suivi_GL.csv'
-data = pd.read_csv(file_path, delimiter=';', decimal=',')
+file_path = r'c:\\Users\\admin\\anaconda3\\envs\\ATMAN\\_TeamSiance\\Santé\\healthsense'
+data = pd.read_csv('doc/Suivi_GL.csv', delimiter=';', decimal=',')
 
 
 # Supprimer les espaces ou caractères étranges dans chaque cellule

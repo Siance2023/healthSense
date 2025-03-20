@@ -1,27 +1,27 @@
-# Maîtriser le diabète : Comment l'IA peut contribuer à l'amélioration du contrôle glycémique ?
+# Mastering Diabetes: How Can AI Contribute to Improving Glycemic Control?
 ![Illustration](doc/Illustration.jpeg)  
----Crédit Image : Google AI---
+---Image Credit: Google AI---
 
 ## 🔎 Motivations
-Afin d'analyser l'impact de la composition et de l'équilibre des repas sur la glycémie, j'envisage de m'appuyer sur les avancées de l'Intelligence Artificielle.
-L'objectif est d'entrainer un modèle d'apprentissage par réseaux de neurones pour tenir compte de la nature des données, peu corrélées les unes et autres, et surtout de la complexité de la tâche. Tous les experts du domaine consultés en conviennent. Il s'agit ici de construire un modèle capable de prédire la glycémie postprandiale à partir des valeurs nutritionnelles des repas.
+To analyze the impact of meal composition and balance on blood glucose levels, I plan to leverage advances in Artificial Intelligence.
+The goal is to train a neural network learning model to account for the nature of the data, which is poorly correlated with each other, and especially the complexity of the task. All consulted experts in the field agree. The aim here is to build a model capable of predicting postprandial glycemia based on the nutritional values of meals.
 
-## 1. Premier défi : collecter des données précises et en quantité suffisante
-Pour cela, il fallait d'abord collecter des mesures, beaucoup de mesures ! J'ai donc décidé de conduire une campagne systématique de mesures portant sur les valeurs nutritionnelles de tous mes repas (4 repas par jour : petit-déjeuner, déjeuner, snack et diner), ainsi que sur les valeurs des glycémies pré- et postprandiales (soit 8 prélèvements par jour). La tâche la plus ardue consiste à déterminer les quantités des aliments constitutifs des repas et de retrouver leurs apports nutritionnels (glucides, protéines, lipides, fibres, énergie (kcal), index glycémique et charge glycémique). Bien que ces informations soient documentées, les sources sont souvent incomplètes et divergent notablement. Le premier challenge consiste donc à collecter des données fiables et les plus précises possibles.
-Cette compagne a été conduite sur une période de 2 semaines.
+## 1. First Challenge: Collecting Accurate and Sufficient Data
+To achieve this, I first needed to collect measurements—a lot of measurements! So, I decided to conduct a systematic measurement campaign covering the nutritional values of all my meals (four meals a day: breakfast, lunch, snack, and dinner), as well as pre- and postprandial blood glucose levels (eight tests per day). The most challenging task was determining the quantities of food in the meals and identifying their nutritional contributions (carbohydrates, proteins, fats, fiber, energy (kcal), glycemic index, and glycemic load). Although these pieces of information are documented, the sources are often incomplete and significantly divergent. The first challenge is therefore to collect the most reliable and accurate data possible.
+This campaign was conducted over a two-week period.
 
-## 📝 Données collectées :
-- Nutriments : Glucides, Lipides, Protéines, Fibres
-- Indice glycémique & charge glycémique
-- Energie : kcal
-- Glycémie pré- et postprandiale
+## 📝 Collected Data:
+- Nutrients: Carbohydrates, Fats, Proteins, Fiber
+- Glycemic Index & Glycemic Load
+- Energy: kcal
+- Pre- and Postprandial Blood Glucose
 
-✅ Premières constatations significatives sur la trajectoire des glycémies
-Très vite, on intégre et on mémorise les quantités d'aliments constitutifs des repas et les apports des produits en termes nutritionnels. Cette connaissance conduit à composer des repas équilibrés. Cet équilibre est une variable très influente sur la limitation des pics glycémiques. Mes glycémies postprandiales ont chuté de l'ordre de 30% au bout d'une semaine. En fait, tout se passe comme si pour prendre des actions efficaces, il suffit de prendre des mesures. En somme, **Pour prendre des mesures, prenez des mesures **!
+✅ First significant findings on blood glucose trajectories
+Very quickly, one integrates and memorizes the quantities of food in meals and their nutritional contributions. This knowledge leads to composing balanced meals. This balance is a highly influential variable in limiting blood sugar spikes. My postprandial blood glucose levels dropped by about 30% within a week. In fact, it appears that to take effective action, you just need to take measurements. In short, **To take measures, take measurements!**
 
-## 🛠 Préparation des données
+## 🛠 Data Preparation
 ```python
-Importer les bibliothèques nécessaires
+# Import necessary libraries
 import os, sys
 import pandas as pd
 import numpy as np
@@ -41,18 +41,21 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 ```
-### 🛠 Chargement et nettoyage des données
+### 🛠 Loading and Cleaning Data
 ```python
-# Charger les données
-data = pd.read_csv("Fichier.csv", sep=None, engine="python", decimal=",") #Votre Fichier.csv
+# Load data
+data = pd.read_csv("File.csv", sep=None, engine="python", decimal=",") #Your File.csv
 
-# Nettoyage
-for col in data.columns:
-    if data[col].dtype == "object":
-        data[col] = data[col].str.strip().str.replace(',', '.').astype(float)
+# Cleaning
+def clean_data(data):
+    for col in data.columns:
+        if data[col].dtype == "object":
+            data[col] = data[col].str.strip().str.replace(',', '.').astype(float)
+    return data
+
+data = clean_data(data)
 ```
-
-### 📊 Visualisation des corrélations entre features
+### 📊 Visualizing Feature Correlations
 ```python
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -61,14 +64,12 @@ corr_matrix = data.corr()
 sns.heatmap(corr_matrix, annot=True, cmap="coolwarm")
 plt.show()
 ```
+![Illustration](logs/Figure_1.png)  
+---Feature Correlation---
 
-![Illustration](logs/Figure_1.png) 
----Corrélation entre les features---
+We observe a weak correlation between the data.
 
-Nous constatons une corrélation faible entre les données.
-
-### 🎯 Choix des variables et normalisation
-
+### 🎯 Variable Selection and Normalization
 ```python
 X = data[['Kcal', 'PRO', 'GLU', 'LIP', 'IG', 'CG', 'GPR']]
 y = data['GPO']
@@ -77,8 +78,8 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 ```
 
-## 2. 🎉 Essais d'entraînement de quelques modèles
-📊 Régression Linéaire (Baseline)
+## 2. 🎉 Training Model Experiments
+📊 Linear Regression (Baseline)
 ```python
 model_gl = LinearRegression()
 model_gl.fit(X_scaled, y)
@@ -87,9 +88,8 @@ y_pred = model_gl.predict(X_scaled)
 print("MSE:", mean_squared_error(y, y_pred))
 print("R2:", r2_score(y, y_pred))
 ```
-
-⚠️ Problème : Score R² = -1.7 est un très mauvais score !
-Un bon modèle doit avoir un R² proche de 1 (1 signifie une prédiction parfaite). Un R² négatif signifie que le modèle est pire qu'une simple moyenne des valeurs observées. Au vu de la faible corrélation entre les données, ce résultat n'est pas surprenant.
+⚠️ Issue: R² Score = -1.7 is a very poor score!
+A good model should have an R² close to 1 (1 means perfect prediction). A negative R² means the model is worse than simply averaging observed values. Given the weak correlation in the data, this result is not surprising.
 
 💡XGBoost
 ```python
@@ -97,7 +97,7 @@ model_xgb = XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=5, rando
 model_xgb.fit(X_scaled, y)
 y_pred_xgb = model_xgb.predict(X_scaled)
 ```
-❌ **Résultat décevant** (R² négatif), donc pas adapté non plus pour notre problème.
+❌ **Disappointing result** (Negative R²), so also not suitable for our problem.
 
 🌟 Random Forest
 ```python
@@ -105,15 +105,11 @@ model_rf = RandomForestRegressor(n_estimators=100, random_state=42)
 model_rf.fit(X_scaled, y)
 y_pred_rf = model_rf.predict(X_scaled)
 ```
-⚠️Amélioration : R² passe à 0.36
-Les modèles statistiques se sont avérés peu indiqués pour traiter ce problème, nous nous sommes donc tournés vers les réseaux de neurones.
+⚠️ Improvement: R² increases to 0.36.
+Statistical models proved inadequate for this problem, so we turned to neural networks.
 
-## 3.🔍 Entrainement d'un réseau de neurones avec PyTorch
+## 3.🔍 Training a Neural Network with PyTorch
 ```python
-import torch
-import torch.nn as nn
-import torch.optim as optim
-
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
@@ -125,61 +121,32 @@ class NeuralNetwork(nn.Module):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
         return self.fc3(x)
-
-# Initialisation
-model_nn = NeuralNetwork()
-criterion = nn.MSELoss()
-optimizer = optim.Adam(model_nn.parameters(), lr=0.001)
-
-# Entraînement
-num_epochs = 500
-for epoch in range(num_epochs):
-    model_nn.train()
-    optimizer.zero_grad()
-    outputs = model_nn(torch.tensor(X_scaled, dtype=torch.float32))
-    loss = criterion(outputs, torch.tensor(y.values, dtype=torch.float32).view(-1, 1))
-    loss.backward()
-    optimizer.step()
-
-    if (epoch+1) % 10 == 0:
-        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss. Item():.4f}')
 ```
-✅ Le réseau de neurones a donné les meilleurs résultats !
-Comme hyperparamètres, ceux qui conduisent au meilleur profil de la loss sont dans notre cas : num_epochs = 500 et learning-rate = 0,001. Le profil de la loss suggère que le modèle apprend bien.
+✅ The neural network provided the best results!
+As hyperparameters, those that lead to the best loss profile are in our case: num_epochs = 500 and learning-rate = 0.001. The loss profile suggests that the model is learning well.
 
-🔍Les premiers résultats obtenus montrent une prévalence des protéines sur les autres facteurs sur la glycémie postprandiale (GPO). Ils semblent suggérer aussi que le contrôle de la glycémie repose sur un équilibre entre protéines et glucides. L'objectif des prochaines étapes de ce projet est de confirmer ce résultat et de le quantifier.
+🔍 The first results obtained show a slight prevalence of proteins over the other factors on postprandial blood glucose (GPO). They also seem to suggest that blood glucose control relies on a balance between proteins and carbohydrates. The objective of the next steps of this project is to confirm this result and to quantify it.
 
-## 4. 🛠 Création de l'application Streamlit
-Une application streamlit a été développée afin de saisir et de soumettre les paramères GLU, PRO, LIP, IG, CG, GPR afin de prédire GPO, glycémie postprandiale.
+## 4. 🛠 Creating the Streamlit Application
+A Streamlit application was developed to input and submit parameters GLU, PRO, LIP, IG, CG, GPR in order to predict GPO, postprandial blood glucose.
 ```python
-st.title("Prédiction de la Glycémie Postprandiale")
-GLU = st.number_input("Glucides")
-PRO = st.number_input("Protéines")
-LIP = st.number_input("Lipides")
-IG = st.number_input("Indice Glycémique")
-CG = st.number_input("Charge Glycémique")
-GPR = st.number_input("Glycémie Prépandriale")
-
-if st.button("Prédire"):
+st.title("Postprandial Blood Glucose Prediction")
+if st.button("Predict"):
     input_data = torch.tensor([[GLU, PRO, LIP, IG, CG, GPR]], dtype=torch.float32)
     prediction = model_nn(input_data).item()
-    st.success(f"Glycémie postprandiale prédite : {prediction:.2f} mg/dL")
+    st.success(f"Predicted postprandial blood glucose: {prediction:.2f} mg/dL")
 ```
+✅ Predictions align with actual post-meal blood glucose measurements.
 
-✅ Les prévisions sont conformes aux mesures de glycémie réalisées après les repas.
+## 🛠 Next Steps?
+- Enhance model training! 🚀
+- Increase the number of features (meal timing, physical activity) and improve data quality.
+
+As the experiment is conducted from the data of a single person, who eats a balanced diets, without excess and at fixed times, who also engages in regular sports activity, therefore subject to moderate glycemic wanderings, the GPO data do not vary enormously between meals. The model tends to predict values that are close to the training data. It would therefore be necessary to test with other profiles of people to determine the generalization capacity of the model. This is the objective of the later phases of this project.
 
 ## 🔎 Conclusion
-✅ Les réseaux de neurones sont adaptés à ce domaine. Parmi tous les modèles expérimentés, ils sont les plus performants et prometteurs.
+✅ Neural networks are well-suited for this field, outperforming other tested models.
+✅ Encouraging results suggest AI can bring major advancements in glycemic control strategies beyond restrictive diets.
+✅ Expanding and diversifying data is crucial to improving model generalization.
 
-✅ Des résultats encourageants
-Bien que les modèles soient perfectibles, principalement en enrichissant le dataset, les premiers résultats sont encourageants. Les glycémies prédites sont conformes à celles qui sont effectivement mesurées.
-L'IA peut apporter des avancées remarquables dans ce domaine de santé publique, en découvrant d'autres pistes pour accompagner les personnes DT1 ou DT2, notamment autour de l'équilibre des repas et pas seulement en adoptant des régimes restrictifs et très contraignants de limitation de tel ou tel type d'aliments.
-
-✅ Nécessité d'augmenter et de diversifier les données
-Comme l'expérience est menée à partir des données d'une seule personne, qui s'alimente de façon équilibrée, sans excès et à heures fixes, qui s'adonne de plus à une activité sportive régulière, donc sujet à une errance glycémique modérée, les données GPO ne varient pas énormément entre les repas. Le modèle a tendance à prédire des valeurs qui sont voisines des données d'entrainement. Il faudrait donc tester avec d'autres profils de personnes pour déterminer la capacité de généralisation du modèle. C'est l'objectif des phases ultérieures de ce projet.
-
-✅ Prochaines étapes ?
-- Améliorer l'entraînement du réseau neuronal avec plus de données ! 🚀
-- Augmenter le nombre de features (horaire des repas, activité physique) et améliorer la quantité et la qualité des données.
-
-A ce sujet, je fais un appel pour constituer une communauté motivée pour enrichir le dataset, qui serait public et anonyme.
+To go further on this subject,I am calling for a motivated community to contribute to a public and anonymous dataset!

@@ -31,7 +31,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-sante_directory = r"C:\\Users\\admin\\anaconda3\\envs\\ATMAN\\_TeamSiance\\Santé"
+sante_directory = r"C:\\Users\\admin\\anaconda3\\envs\\ATMAN\\_TeamSiance\\Santé\\healthsense"
 #Forcer le répertoire courant
 os.chdir(sante_directory)
 
@@ -45,7 +45,7 @@ performants.
 * Vérifiez les types de données, les valeurs manquantes, les valeurs aberrantes, etc.
 '''
 
-data = pd.read_csv("doc\\Suivi_GL.csv", sep=None, engine="python", decimal=",")
+data = pd.read_csv("doc/Suivi_GL.csv", sep=None, engine="python", decimal=",")
 
 # Supprimer les espaces ou caractères étranges dans chaque cellule
 for col in data.columns:

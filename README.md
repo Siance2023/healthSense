@@ -139,7 +139,7 @@ if st.button("Predict"):
 ✅ Predictions align with actual post-meal blood glucose measurements.
 
 ## 🛠 Next Steps TL;DR
-As the experiment is conducted from the data of a single person, who eats a balanced diets, without excess and at fixed times, who also engages in regular sports activity, therefore subject to moderate glycemic wanderings, the GPO data do not vary enormously between meals. The model tends to predict values that are close to the training data. It would therefore be necessary to test with other profiles of people to determine the generalization capacity of the model. This is the objective of the later phases of this project.
+As the experiment is conducted from the data of a single person, who eats a balanced diets, without excess and at fixed times, who also engages in regular sports activity, therefore subject to moderate glycemic wanderings, the GPO data do not vary enormously between meals. This acts as a bias that influences model inference. It would therefore be necessary to test with other profiles of people to determine the generalization capacity of the model. This is the objective of the later phases of this project.
 
 - Improve the training of the foundational model with more data! 🚀
 We are currently testing transformer models, and even diffusion models, where the first convolutional layers will be used to represent the data according to essential characteristics. From this representation in the latent space, we will group them into clusters corresponding to classes of postprandial glycemia values. For this, we need a lot of data.
